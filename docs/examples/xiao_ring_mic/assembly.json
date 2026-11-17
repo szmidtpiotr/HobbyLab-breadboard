@@ -1,0 +1,163 @@
+{
+ "format": "hlbb-assembly",
+ "version": 1,
+ "title": "XIAO ESP32-S3 + ring LED + mikrofon",
+ "board": null,
+ "notes": "Rezystor 330 Ω lutowany w przewód danych, blisko ringu.",
+ "ok": true,
+ "parts": [
+  {
+   "ref": "U1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "XIAO ESP32-S3",
+   "bands": null
+  },
+  {
+   "ref": "LED1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "Ring WS2812B",
+   "bands": null
+  },
+  {
+   "ref": "MIC1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "Mikrofon INMP441",
+   "bands": null
+  },
+  {
+   "ref": "R1",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "330 Ω",
+   "bands": [
+    "pomarańczowy",
+    "pomarańczowy",
+    "brązowy",
+    "złoty"
+   ]
+  }
+ ],
+ "steps": [
+  {
+   "group": "zbierz",
+   "title": "Zbierz części",
+   "text": "Połóż przy płytce wszystko z listy i odhacz, gdy masz komplet.",
+   "details": [
+    "U1: moduł XIAO ESP32-S3",
+    "LED1: moduł Ring WS2812B",
+    "MIC1: moduł Mikrofon INMP441",
+    "R1: rezystor 330 Ω (paski: pomarańczowy–pomarańczowy–brązowy–złoty)"
+   ],
+   "hl": [],
+   "id": "s01",
+   "n": 1
+  },
+  {
+   "group": "kable",
+   "title": "Sieć 5V",
+   "text": "Połącz U1.5V z LED1.5V kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s02",
+   "n": 2
+  },
+  {
+   "group": "kable",
+   "title": "Sieć GND",
+   "text": "Połącz U1.GND z LED1.GND kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s03",
+   "n": 3
+  },
+  {
+   "group": "kable",
+   "title": "Sieć GND",
+   "text": "Połącz U1.GND z MIC1.GND kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s04",
+   "n": 4
+  },
+  {
+   "group": "kable",
+   "title": "Sieć GND",
+   "text": "Połącz U1.GND z MIC1.L/R kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s05",
+   "n": 5
+  },
+  {
+   "group": "kable",
+   "title": "Sieć 3V3",
+   "text": "Połącz U1.3V3 z MIC1.VDD kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s06",
+   "n": 6
+  },
+  {
+   "group": "kable",
+   "title": "Sieć DATA",
+   "text": "Połącz U1.D0/GPIO1 z R1.1 kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s07",
+   "n": 7
+  },
+  {
+   "group": "kable",
+   "title": "Sieć DIN",
+   "text": "Połącz R1.2 z LED1.DIN kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s08",
+   "n": 8
+  },
+  {
+   "group": "kable",
+   "title": "Sieć BCLK",
+   "text": "Połącz U1.D8/GPIO7/SCK z MIC1.SCK kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s09",
+   "n": 9
+  },
+  {
+   "group": "kable",
+   "title": "Sieć WS",
+   "text": "Połącz U1.D9/GPIO8/MISO z MIC1.WS kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s10",
+   "n": 10
+  },
+  {
+   "group": "kable",
+   "title": "Sieć SD",
+   "text": "Połącz U1.D10/GPIO9/MOSI z MIC1.SD kablem albo lutem.",
+   "details": [],
+   "hl": [],
+   "id": "s11",
+   "n": 11
+  },
+  {
+   "group": "kontrola",
+   "title": "Kontrola przed zasilaniem",
+   "text": "Zanim podłączysz zasilanie, porównaj płytkę z obrazkiem i sprawdź multimetrem zwarcia.",
+   "details": [
+    "Przejdź kolumna po kolumnie z legendą obrazka.",
+    "Multimetr na ciągłość: między plusem a masą nie może piszczeć.",
+    "Dopiero potem podłącz USB albo zasilacz."
+   ],
+   "hl": [],
+   "id": "s12",
+   "n": 12
+  }
+ ],
+ "hash": "3288a1b99cfb"
+}

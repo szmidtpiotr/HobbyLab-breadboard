@@ -1,0 +1,144 @@
+{
+ "format": "hlbb-assembly",
+ "version": 1,
+ "title": "Miganie diodą LED: Arduino Nano, pin D2",
+ "board": "płytka stykowa 400 pól",
+ "notes": "Nano zasilane z USB. Minus górnej i dolnej szyny połączony przewodem w kolumnie 28.",
+ "ok": true,
+ "parts": [
+  {
+   "ref": "U1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "Arduino Nano",
+   "bands": null
+  },
+  {
+   "ref": "R1",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "330 Ω",
+   "bands": [
+    "pomarańczowy",
+    "pomarańczowy",
+    "brązowy",
+    "złoty"
+   ]
+  },
+  {
+   "ref": "D1",
+   "kind": "led",
+   "kind_pl": "dioda LED",
+   "value": "czerwona",
+   "bands": null
+  }
+ ],
+ "steps": [
+  {
+   "group": "zbierz",
+   "title": "Zbierz części",
+   "text": "Połóż przy płytce wszystko z listy i odhacz, gdy masz komplet.",
+   "details": [
+    "U1: moduł Arduino Nano",
+    "R1: rezystor 330 Ω (paski: pomarańczowy–pomarańczowy–brązowy–złoty)",
+    "D1: dioda LED czerwona",
+    "Przewody: czarny ×3"
+   ],
+   "hl": [],
+   "id": "s01",
+   "n": 1
+  },
+  {
+   "group": "moduly",
+   "title": "U1: moduł Arduino Nano",
+   "text": "Wepnij Arduino Nano (U1): nóżka 1 (D1/TX) w h1, pierwszy rząd biegnie w prawo do h15, drugi rząd w d15–d1.",
+   "details": [
+    "Sprawdź napis „D1/TX” na płytce modułu przy dziurce h1.",
+    "Dociśnij równo obie strony, nóżki łatwo się zaginają."
+   ],
+   "hl": [
+    "p-U1"
+   ],
+   "id": "s02",
+   "n": 2
+  },
+  {
+   "group": "niskie",
+   "title": "R1: rezystor 330 Ω",
+   "text": "Wepnij rezystor 330 Ω w j5 i j20. Kierunek obojętny.",
+   "details": [
+    "Paski: pomarańczowy – pomarańczowy – brązowy – złoty (czytaj od strony dalej od złotego)."
+   ],
+   "hl": [
+    "p-R1"
+   ],
+   "id": "s03",
+   "n": 3
+  },
+  {
+   "group": "wysokie",
+   "title": "D1: dioda LED czerwona",
+   "text": "Wepnij diodę LED: dłuższa nóżka (+) w i20, krótsza (−) w i22.",
+   "details": [
+    "Krótsza nóżka jest też od strony ściętej krawędzi obudowy."
+   ],
+   "hl": [
+    "p-D1"
+   ],
+   "id": "s04",
+   "n": 4
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: T-28 → B-28",
+   "text": "Przewód czarny: z T-28 do B-28.",
+   "details": [],
+   "hl": [
+    "w-2"
+   ],
+   "id": "s05",
+   "n": 5
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: T-14 → a2",
+   "text": "Przewód czarny: z T-14 do a2.",
+   "details": [
+    "a2 — w tej kolumnie jest U1.GND (nóżka 29)."
+   ],
+   "hl": [
+    "w-1"
+   ],
+   "id": "s06",
+   "n": 6
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: j22 → B-22",
+   "text": "Przewód czarny: z j22 do B-22.",
+   "details": [
+    "j22 — w tej kolumnie jest D1.K.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-0"
+   ],
+   "id": "s07",
+   "n": 7
+  },
+  {
+   "group": "kontrola",
+   "title": "Kontrola przed zasilaniem",
+   "text": "Zanim podłączysz zasilanie, porównaj płytkę z obrazkiem i sprawdź multimetrem zwarcia.",
+   "details": [
+    "Przejdź kolumna po kolumnie z legendą obrazka.",
+    "Multimetr na ciągłość: między plusem a masą nie może piszczeć.",
+    "Dopiero potem podłącz USB albo zasilacz."
+   ],
+   "hl": [],
+   "id": "s08",
+   "n": 8
+  }
+ ],
+ "hash": "6f6ea958e03d"
+}

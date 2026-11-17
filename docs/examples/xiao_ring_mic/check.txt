@@ -1,0 +1,2 @@
+XIAO ESP32-S3 + ring LED + mikrofon
+SPRAWDZENIE: OK — połączenia na rysunku zgadzają się z opisem układu.

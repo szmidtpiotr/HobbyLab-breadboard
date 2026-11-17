@@ -1,0 +1,2 @@
+Miganie diodą LED: Arduino Nano, pin D2
+SPRAWDZENIE: OK — połączenia na rysunku zgadzają się z opisem układu.

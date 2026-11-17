@@ -1,0 +1,4 @@
+#!/bin/sh
+# Run hlbb from the repo checkout without installing it.
+REPO="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m hlbb "$@"

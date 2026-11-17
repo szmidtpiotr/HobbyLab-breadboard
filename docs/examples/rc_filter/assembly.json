@@ -1,0 +1,164 @@
+{
+ "format": "hlbb-assembly",
+ "version": 1,
+ "title": "Filtr RC: PWM z D13 → napięcie na A0",
+ "board": "mała płytka stykowa 170 pól",
+ "notes": "Arduino UNO leży obok płytki; przewody idą do gniazd UNO.",
+ "ok": true,
+ "parts": [
+  {
+   "ref": "U1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "Arduino UNO R3",
+   "bands": null
+  },
+  {
+   "ref": "R1",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "10 kΩ",
+   "bands": [
+    "brązowy",
+    "czarny",
+    "pomarańczowy",
+    "złoty"
+   ]
+  },
+  {
+   "ref": "R2",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "1 kΩ",
+   "bands": [
+    "brązowy",
+    "czarny",
+    "czerwony",
+    "złoty"
+   ]
+  },
+  {
+   "ref": "C1",
+   "kind": "cap_e",
+   "kind_pl": "kondensator elektrolityczny",
+   "value": "10 µF",
+   "bands": null
+  }
+ ],
+ "steps": [
+  {
+   "group": "zbierz",
+   "title": "Zbierz części",
+   "text": "Połóż przy płytce wszystko z listy i odhacz, gdy masz komplet.",
+   "details": [
+    "U1: moduł Arduino UNO R3",
+    "R1: rezystor 10 kΩ (paski: brązowy–czarny–pomarańczowy–złoty)",
+    "R2: rezystor 1 kΩ (paski: brązowy–czarny–czerwony–złoty)",
+    "C1: kondensator elektrolityczny 10 µF",
+    "Przewody: pomarańczowy ×1, czarny ×1, zielony ×1"
+   ],
+   "hl": [],
+   "id": "s01",
+   "n": 1
+  },
+  {
+   "group": "niskie",
+   "title": "R1: rezystor 10 kΩ",
+   "text": "Wepnij rezystor 10 kΩ w a2 i a5. Kierunek obojętny.",
+   "details": [
+    "Paski: brązowy – czarny – pomarańczowy – złoty (czytaj od strony dalej od złotego)."
+   ],
+   "hl": [
+    "p-R1"
+   ],
+   "id": "s02",
+   "n": 2
+  },
+  {
+   "group": "niskie",
+   "title": "R2: rezystor 1 kΩ",
+   "text": "Wepnij rezystor 1 kΩ w b5 i b11. Kierunek obojętny.",
+   "details": [
+    "Paski: brązowy – czarny – czerwony – złoty (czytaj od strony dalej od złotego)."
+   ],
+   "hl": [
+    "p-R2"
+   ],
+   "id": "s03",
+   "n": 3
+  },
+  {
+   "group": "wysokie",
+   "title": "C1: kondensator elektrolityczny 10 µF",
+   "text": "Wepnij kondensator: plus (dłuższa nóżka) w e5, minus w e8.",
+   "details": [
+    "Minus = nóżka od strony jasnego paska z kreskami na obudowie.",
+    "Odwrotnie wpięty elektrolit może się nagrzać i wybrzuszyć."
+   ],
+   "hl": [
+    "p-C1"
+   ],
+   "id": "s04",
+   "n": 4
+  },
+  {
+   "group": "kable",
+   "title": "Przewód czarny: c8 → U1.GND",
+   "text": "Przewód czarny: z c8 do pin GND na Arduino UNO R3 (U1).",
+   "details": [
+    "c8 — w tej kolumnie jest C1.-.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-1",
+    "p-U1"
+   ],
+   "id": "s05",
+   "n": 5
+  },
+  {
+   "group": "kable",
+   "title": "Przewód pomarańczowy: e2 → U1.D13",
+   "text": "Przewód pomarańczowy: z e2 do pin D13 na Arduino UNO R3 (U1).",
+   "details": [
+    "e2 — w tej kolumnie jest R1.1.",
+    "Sieć: PWM."
+   ],
+   "hl": [
+    "w-0",
+    "p-U1"
+   ],
+   "id": "s06",
+   "n": 6
+  },
+  {
+   "group": "kable",
+   "title": "Przewód zielony: d11 → U1.A0",
+   "text": "Przewód zielony: z d11 do pin A0 na Arduino UNO R3 (U1).",
+   "details": [
+    "d11 — w tej kolumnie jest R2.2.",
+    "Sieć: OUT."
+   ],
+   "hl": [
+    "w-2",
+    "p-U1"
+   ],
+   "id": "s07",
+   "n": 7
+  },
+  {
+   "group": "kontrola",
+   "title": "Kontrola przed zasilaniem",
+   "text": "Zanim podłączysz zasilanie, porównaj płytkę z obrazkiem i sprawdź multimetrem zwarcia.",
+   "details": [
+    "Przejdź kolumna po kolumnie z legendą obrazka.",
+    "Multimetr na ciągłość: między plusem a masą nie może piszczeć.",
+    "Dopiero potem podłącz USB albo zasilacz."
+   ],
+   "hl": [],
+   "id": "s08",
+   "n": 8
+  }
+ ],
+ "hash": "f5ec11795a82"
+}

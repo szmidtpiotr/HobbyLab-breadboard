@@ -1,0 +1,2 @@
+Filtr RC: PWM z D13 → napięcie na A0
+SPRAWDZENIE: OK — połączenia na rysunku zgadzają się z opisem układu.

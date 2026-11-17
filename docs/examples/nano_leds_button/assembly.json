@@ -1,0 +1,288 @@
+{
+ "format": "hlbb-assembly",
+ "version": 1,
+ "title": "Nano: dwie diody LED i przycisk",
+ "board": "płytka stykowa 400 pól",
+ "notes": "Przycisk na D2 z wewnętrznym podciąganiem (INPUT_PULLUP): wciśnięty = LOW.",
+ "ok": true,
+ "parts": [
+  {
+   "ref": "U1",
+   "kind": "module",
+   "kind_pl": "moduł",
+   "value": "Arduino Nano",
+   "bands": null
+  },
+  {
+   "ref": "R1",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "330 Ω",
+   "bands": [
+    "pomarańczowy",
+    "pomarańczowy",
+    "brązowy",
+    "złoty"
+   ]
+  },
+  {
+   "ref": "R2",
+   "kind": "resistor",
+   "kind_pl": "rezystor",
+   "value": "330 Ω",
+   "bands": [
+    "pomarańczowy",
+    "pomarańczowy",
+    "brązowy",
+    "złoty"
+   ]
+  },
+  {
+   "ref": "LED1",
+   "kind": "led",
+   "kind_pl": "dioda LED",
+   "value": "czerwona",
+   "bands": null
+  },
+  {
+   "ref": "LED2",
+   "kind": "led",
+   "kind_pl": "dioda LED",
+   "value": "zielona",
+   "bands": null
+  },
+  {
+   "ref": "SW1",
+   "kind": "button",
+   "kind_pl": "przycisk",
+   "value": "przycisk",
+   "bands": null
+  }
+ ],
+ "steps": [
+  {
+   "group": "zbierz",
+   "title": "Zbierz części",
+   "text": "Połóż przy płytce wszystko z listy i odhacz, gdy masz komplet.",
+   "details": [
+    "U1: moduł Arduino Nano",
+    "R1: rezystor 330 Ω (paski: pomarańczowy–pomarańczowy–brązowy–złoty)",
+    "R2: rezystor 330 Ω (paski: pomarańczowy–pomarańczowy–brązowy–złoty)",
+    "LED1: dioda LED czerwona",
+    "LED2: dioda LED zielona",
+    "SW1: przycisk przycisk",
+    "Przewody: pomarańczowy ×1, czarny ×5, zielony ×1, żółty ×1"
+   ],
+   "hl": [],
+   "id": "s01",
+   "n": 1
+  },
+  {
+   "group": "moduly",
+   "title": "U1: moduł Arduino Nano",
+   "text": "Wepnij Arduino Nano (U1): nóżka 1 (D1/TX) w h1, pierwszy rząd biegnie w prawo do h15, drugi rząd w d15–d1.",
+   "details": [
+    "Sprawdź napis „D1/TX” na płytce modułu przy dziurce h1.",
+    "Dociśnij równo obie strony, nóżki łatwo się zaginają."
+   ],
+   "hl": [
+    "p-U1"
+   ],
+   "id": "s02",
+   "n": 2
+  },
+  {
+   "group": "niskie",
+   "title": "R1: rezystor 330 Ω",
+   "text": "Wepnij rezystor 330 Ω w g18 i g22. Kierunek obojętny.",
+   "details": [
+    "Paski: pomarańczowy – pomarańczowy – brązowy – złoty (czytaj od strony dalej od złotego)."
+   ],
+   "hl": [
+    "p-R1"
+   ],
+   "id": "s03",
+   "n": 3
+  },
+  {
+   "group": "niskie",
+   "title": "R2: rezystor 330 Ω",
+   "text": "Wepnij rezystor 330 Ω w c19 i c23. Kierunek obojętny.",
+   "details": [
+    "Paski: pomarańczowy – pomarańczowy – brązowy – złoty (czytaj od strony dalej od złotego)."
+   ],
+   "hl": [
+    "p-R2"
+   ],
+   "id": "s04",
+   "n": 4
+  },
+  {
+   "group": "wysokie",
+   "title": "LED1: dioda LED czerwona",
+   "text": "Wepnij diodę LED: dłuższa nóżka (+) w h22, krótsza (−) w h24.",
+   "details": [
+    "Krótsza nóżka jest też od strony ściętej krawędzi obudowy."
+   ],
+   "hl": [
+    "p-LED1"
+   ],
+   "id": "s05",
+   "n": 5
+  },
+  {
+   "group": "wysokie",
+   "title": "LED2: dioda LED zielona",
+   "text": "Wepnij diodę LED: dłuższa nóżka (+) w b23, krótsza (−) w b25.",
+   "details": [
+    "Krótsza nóżka jest też od strony ściętej krawędzi obudowy."
+   ],
+   "hl": [
+    "p-LED2"
+   ],
+   "id": "s06",
+   "n": 6
+  },
+  {
+   "group": "wysokie",
+   "title": "SW1: przycisk",
+   "text": "Wepnij przycisk okrakiem nad rowkiem: nóżki w e27, e29 (góra) i f27, f29 (dół).",
+   "details": [
+    "Jeśli nie wchodzi, obróć o 90° — nóżki są dalej od siebie w jedną stronę."
+   ],
+   "hl": [
+    "p-SW1"
+   ],
+   "id": "s07",
+   "n": 7
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: a2 → T-2",
+   "text": "Przewód czarny: z a2 do T-2.",
+   "details": [
+    "a2 — w tej kolumnie jest U1.GND (nóżka 29)."
+   ],
+   "hl": [
+    "w-6"
+   ],
+   "id": "s08",
+   "n": 8
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: j4 → B-4",
+   "text": "Przewód czarny: z j4 do B-4.",
+   "details": [
+    "j4 — w tej kolumnie jest U1.GND.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-7"
+   ],
+   "id": "s09",
+   "n": 9
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: j24 → B-23",
+   "text": "Przewód czarny: z j24 do B-23.",
+   "details": [
+    "j24 — w tej kolumnie jest LED1.K.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-1"
+   ],
+   "id": "s10",
+   "n": 10
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: a25 → T-25",
+   "text": "Przewód czarny: z a25 do T-25.",
+   "details": [
+    "a25 — w tej kolumnie jest LED2.K.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-3"
+   ],
+   "id": "s11",
+   "n": 11
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód czarny: a29 → T-29",
+   "text": "Przewód czarny: z a29 do T-29.",
+   "details": [
+    "a29 — w tej kolumnie jest SW1.B1.",
+    "Sieć: GND."
+   ],
+   "hl": [
+    "w-5"
+   ],
+   "id": "s12",
+   "n": 12
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód żółty: j5 → j27",
+   "text": "Przewód żółty: z j5 do j27.",
+   "details": [
+    "j5 — w tej kolumnie jest U1.D2.",
+    "j27 — w tej kolumnie jest SW1.A2.",
+    "Sieć: BTN."
+   ],
+   "hl": [
+    "w-4"
+   ],
+   "id": "s13",
+   "n": 13
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód pomarańczowy: j6 → f18",
+   "text": "Przewód pomarańczowy: z j6 do f18.",
+   "details": [
+    "j6 — w tej kolumnie jest U1.D3.",
+    "f18 — w tej kolumnie jest R1.1.",
+    "Sieć: D3."
+   ],
+   "hl": [
+    "w-0"
+   ],
+   "id": "s14",
+   "n": 14
+  },
+  {
+   "group": "przewody",
+   "title": "Przewód zielony: i7 → e19",
+   "text": "Przewód zielony: z i7 do e19.",
+   "details": [
+    "i7 — w tej kolumnie jest U1.D4.",
+    "e19 — w tej kolumnie jest R2.1.",
+    "Sieć: D4."
+   ],
+   "hl": [
+    "w-2"
+   ],
+   "id": "s15",
+   "n": 15
+  },
+  {
+   "group": "kontrola",
+   "title": "Kontrola przed zasilaniem",
+   "text": "Zanim podłączysz zasilanie, porównaj płytkę z obrazkiem i sprawdź multimetrem zwarcia.",
+   "details": [
+    "Przejdź kolumna po kolumnie z legendą obrazka.",
+    "Multimetr na ciągłość: między plusem a masą nie może piszczeć.",
+    "Dopiero potem podłącz USB albo zasilacz."
+   ],
+   "hl": [],
+   "id": "s16",
+   "n": 16
+  }
+ ],
+ "hash": "0e683990a145"
+}

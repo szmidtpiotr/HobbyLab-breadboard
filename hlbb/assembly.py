@@ -19,6 +19,8 @@ KIND_PL = {
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "listwa goldpin",
     "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
     "to92": "element w obudowie TO-92", "pot": "potencjometr", "led_rgb": "dioda LED RGB",
+    "to220": "element w obudowie TO-220", "buzzer": "brzęczyk", "mic": "mikrofon elektretowy",
+    "ldr": "fotorezystor", "terminal": "złącze śrubowe",
 }
 
 
@@ -41,7 +43,8 @@ GROUPS = [
 PART_GROUP = {"module": "moduly", "dip": "moduly", "resistor": "niskie", "diode": "niskie",
               "cap": "wysokie", "cap_e": "wysokie", "led": "wysokie", "button": "wysokie",
               "header": "wysokie", "fuse": "niskie", "to92": "wysokie", "pot": "wysokie",
-              "led_rgb": "wysokie"}
+              "led_rgb": "wysokie", "to220": "wysokie", "buzzer": "wysokie", "mic": "wysokie",
+              "ldr": "wysokie", "terminal": "wysokie"}
 POWER = {"5V", "+5V", "3V3", "+3V3", "VCC", "VIN", "VBUS", "VDD", "12V", "+12V"}
 
 
@@ -127,6 +130,25 @@ def _part_step(part: Part, holes: list[Hole]) -> tuple[str, str, list[str]]:
         details.append("„Do siebie” = w dół obrazka, w stronę rzędu j. Nóżki od lewej to "
                        f"{', '.join(p.display for p in part.pins)}, patrząc na płaską stronę.")
         details.append("Odwrotnie wpięty nie działa albo się grzeje — sprawdź napis na obudowie.")
+    elif part.kind == "to220":
+        pins = ", ".join(f"{p.display} w {x}" for p, x in zip(part.pins, h))
+        text = (f"Wepnij {kind} {part.value} ({part.ref}) napisem do siebie, metalową płytką "
+                f"od siebie: {pins}.")
+        details.append("„Do siebie” = w dół obrazka. Metalowa płytka jest zwykle połączona ze "
+                       "środkową nóżką — nie może dotykać innych elementów ani przewodów.")
+    elif part.kind in ("buzzer", "mic"):
+        text = f"Wepnij {kind}: plus (+) w {h[0]}, minus (−) w {h[1]}."
+        if part.kind == "buzzer":
+            details.append("Plus to dłuższa nóżka albo ta przy znaku + na obudowie.")
+        else:
+            details.append("Minus to nóżka połączona z metalową obudową kapsułki (widać ścieżkę).")
+    elif part.kind == "ldr":
+        text = f"Wepnij fotorezystor {part.value} w {h[0]} i {h[1]}. Kierunek obojętny."
+    elif part.kind == "terminal":
+        pins = ", ".join(f"{p.display} w {x}" for p, x in zip(part.pins, h))
+        text = f"Wepnij {part.value} ({part.ref}) śrubami do siebie: {pins}."
+        details.append("Raster 5 mm to prawie dwie dziurki, dlatego nóżki co drugą kolumnę. "
+                       "Grube nóżki mogą nie wejść w płytkę stykową — wtedy podłącz przewodami.")
     elif part.kind == "led_rgb":
         name = {"R": "czerwona", "G": "zielona", "B": "niebieska"}
         com = "wspólna anoda, +" if part.common == "A" else "wspólna katoda, −"

@@ -14,7 +14,8 @@ RAIL_Y = {"T+": -3.2, "T-": -2.2, "B+": 13.2, "B-": 14.2}
 BODY = {
     "resistor": ("#dcc08a", "#6b5a2e"), "cap": ("#e8a33d", "#8a5a12"),
     "cap_e": ("#2b4f9e", "#162a55"), "diode": ("#2a2a2a", "#000"), "led": ("#e23b3b", "#8a1010"),
-    "fuse": ("#f2c14e", "#8a6a10"),
+    "fuse": ("#f2c14e", "#8a6a10"), "buzzer": ("#222222", "#000"), "mic": ("#a0a0a0", "#555"),
+    "ldr": ("#e9b44c", "#8a6a10"),
 }
 
 
@@ -125,6 +126,10 @@ def render_breadboard(c: Circuit, legend: bool = True) -> str:
             _to92(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "led_rgb":
             _led_rgb(s, part, [hole_xy(h) for h in pl.holes])
+        elif part.kind == "to220":
+            _to220(s, part, [hole_xy(h) for h in pl.holes])
+        elif part.kind == "terminal":
+            _terminal(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "pot":
             _pot(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "button":
@@ -296,6 +301,16 @@ def _two_leg(s: Svg, part, a, b):
             s.line(p[0], p[1], q[0], q[1], stroke="#ddd", sw=20)
     elif part.kind == "cap":
         s.circle(mx, my, 13, fill=fill, stroke=stroke, sw=2)
+    elif part.kind in ("buzzer", "mic"):
+        rad = 17 if part.kind == "buzzer" else 13
+        s.circle(mx, my, rad, fill=fill, stroke=stroke, sw=2)
+        s.circle(mx, my, 4, fill="#555" if part.kind == "buzzer" else "#333")
+        s.text(a[0], a[1] + 30, "+", size=18, anchor="middle", weight="bold", fill="#d00000")
+        s.text(b[0], b[1] + 30, "−", size=18, anchor="middle", weight="bold", fill="#333")
+    elif part.kind == "ldr":                 # disc with the meandering track
+        s.circle(mx, my, 14, fill=fill, stroke=stroke, sw=2)
+        s.path(f"M{mx - 8:.1f},{my - 6:.1f} h16 v4 h-16 v4 h16 v4 h-16",
+               stroke="#7a3d00", sw=2)
     elif part.kind == "fuse":                # polymer PTC: a flat yellow disc
         s.circle(mx, my, 15, fill=fill, stroke=stroke, sw=2)
         s.text(mx, my + 5, "F", size=14, anchor="middle", weight="bold", fill="#5a4300")
@@ -349,6 +364,30 @@ def _led_rgb(s: Svg, part, pts):
     for i, col in enumerate(("#e02424", "#1e9e3a", "#1f5fd6")):     # the three dies
         s.circle(cx + (i - 1) * 8, cy, 4, fill=col)
     _label(s, cx, cy - r - 8, f"{part.ref} {part.value}", size=14)
+    _pin_names_under(s, part, pts)
+
+
+def _to220(s: Svg, part, pts):
+    """TO-220 from above: the body, its printed front towards the bottom of the picture,
+    the metal tab (with the hole) at the back = up the picture."""
+    (xa, y), (xc, _) = pts[0], pts[-1]
+    x0, x1 = xa - 18, xc + 18
+    # kept low (under the next row's holes) so wires into the row behind stay visible
+    s.rect(x0 + 2, y - 30, x1 - x0 - 4, 11, fill="#b8b8b8", stroke="#666", rx=2, sw=1.5)
+    s.circle((x0 + x1) / 2, y - 24.5, 3, fill="#f4f4f0", stroke="#666")
+    s.rect(x0, y - 20, x1 - x0, 13, fill="#2a2a2a", stroke="#000", rx=2, sw=2)
+    _label(s, x1 + 4, y - 12, f"{part.ref} {part.value}", size=14, anchor="start")
+    _pin_names_under(s, part, pts)
+
+
+def _terminal(s: Svg, part, pts):
+    y = pts[0][1]
+    x0, x1 = pts[0][0] - 20, pts[-1][0] + 20
+    s.rect(x0, y - 44, x1 - x0, 36, fill="#2e8b57", stroke="#1d5c39", rx=3, sw=2)
+    for x, _ in pts:                          # one screw per contact
+        s.circle(x, y - 26, 10, fill="#c9c9c9", stroke="#666", sw=1.5)
+        s.line(x - 6, y - 26, x + 6, y - 26, stroke="#555", sw=2.5)
+    _label(s, (x0 + x1) / 2, y - 52, f"{part.ref} {part.value}", size=14)
     _pin_names_under(s, part, pts)
 
 

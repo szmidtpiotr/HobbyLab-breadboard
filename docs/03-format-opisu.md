@@ -38,6 +38,10 @@ f1 = c.fuse("F1", "PTC 50 mA")                # bezpiecznik (polimerowy/szklany)
 q1 = c.transistor("Q1", "BC547B")             # TO-92; pins= nazwy nóżek od lewej patrząc na płaską stronę (domyślnie C,B,E)
 u5 = c.to92("U5", "DS18B20", ["GND", "DQ", "VDD"])   # inny układ w TO-92 (czujnik, stabilizator 78L05, TL431)
 rgb = c.led_rgb("LED2", "5 mm")              # 4 nóżki w rzędzie: R, wspólna (najdłuższa), G, B; common="A" (+) albo "K" (−)
+reg = c.to220("U6", "L7805CV", ["IN", "GND", "OUT"], kind_pl="stabilizator")  # TO-220: nóżki od lewej patrząc na napis
+bz = c.buzzer("BZ1", "SFM-27")                # brzęczyk: +, -   (c.microphone(...) — mikrofon elektretowy, też +, -)
+ph = c.ldr("R9", "GL5539")                    # fotorezystor, bez biegunowości
+j1 = c.terminal("J2", 2, names=["+12V", "GND"])   # złącze śrubowe ARK 5 mm: na płytce co 2 kolumny
 rv = c.pot("RV1", "10 kΩ")                    # potencjometr: piny 1, W (suwak), 3
 tvs = c.diode("D1", "P6KE33CA", bidirectional=True, kind_pl="dioda TVS")   # dwukierunkowa = bez paska
 br = c.dip("BR1", "DB107", ["~A", "~B", "+", "-"], kind_pl="mostek prostowniczy")  # kind_pl = nazwa w krokach
@@ -68,8 +72,9 @@ c.cable(u["D4"], m["SDA"], "blue")            # kabel moduł–moduł (bez płyt
 - **Dziurki:** `a1`…`j63`. Kolumna a–e to jeden pasek, f–j drugi. Rowek między e i f.
   Szyny `T…` leżą nad rzędem a, szyny `B…` pod rzędem j — elementy zasilane z górnej szyny
   kładź w górnej połowie, wtedy przewody są krótkie.
-- **Rodzaje elementów:** `resistor`, `cap`, `cap_electrolytic`, `diode`, `led`, `fuse`
-  (2 nóżki); `transistor`, `to92`, `pot` (3 nóżki w rzędzie); `led_rgb` (4 w rzędzie); `dip`, `module`, `header`,
+- **Rodzaje elementów:** `resistor`, `cap`, `cap_electrolytic`, `diode`, `led`, `fuse`, `buzzer`, `microphone`, `ldr`
+  (2 nóżki); `transistor`, `to92`, `to220`, `pot` (3 nóżki w rzędzie); `led_rgb` (4 w rzędzie);
+  `terminal` (złącze śrubowe, nóżki co 2 kolumny); `dip`, `module`, `header`,
   `button`. Każdy przyjmuje `kind_pl="…"` — nazwę w krokach montażu („dioda Zenera”,
   „mostek prostowniczy”). Zastępczy `header` tylko dla rzeczy spoza tej listy, i wtedy
   powiedz osobie budującej, że element jest narysowany jako zwykły blok nóżek.

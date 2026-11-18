@@ -115,3 +115,58 @@ def test_led_rgb_common_cathode_and_errors():
     assert {x["ref"]: x for x in design_dict(c)["PARTS"]}["LED1"]["symbol"] == "Device:LED_RKGB"
     with pytest.raises(HlbbError):
         Circuit("y").led_rgb("LED2", common="X")
+
+
+def demo2():
+    c = Circuit("Nowe elementy 2", board=Board.HALF_400)
+    reg = c.to220("U1", "L7805CV", ["IN", "GND", "OUT"], kind_pl="stabilizator")
+    bz = c.buzzer("BZ1", "SFM-27")
+    mic = c.microphone("MK1")
+    ph = c.ldr("R1", "GL5539")
+    j1 = c.terminal("J1", 2, names=["+12V", "GND"])
+    c.net("VIN", j1["+12V"], reg["IN"])
+    c.net("GND", j1["GND"], reg["GND"], bz["-"])
+    c.net("OUT", reg["OUT"], bz["+"])
+    bb = c.breadboard
+    bb.place(j1, "a2")                 # +12V a2, GND a4
+    bb.place(reg, "c8")                # IN c8, GND c9, OUT c10
+    bb.wire("b2", "b8", "red")
+    bb.wire("e4", "e9", "black")
+    bb.place(bz, "a10", "a14")
+    bb.wire("d9", "d14", "black")      # buzzer minus to GND... (also joins a14 strip)
+    bb.place(mic, "h20", "h22")
+    bb.place(ph, "h25", "h28")
+    return c
+
+
+def test_more_kinds_check_steps_kicad():
+    c = demo2()
+    assert check(c).ok, check(c).report()
+    pl = c.breadboard.placement_of(c.parts[4])
+    assert [h.name for h in pl.holes] == ["a2", "a4"]              # terminal: every 2nd column
+    st = {s["title"].split(":")[0]: s for s in build_assembly(c)["steps"] if s["hl"]}
+    assert st["U1"]["title"] == "U1: stabilizator L7805CV"
+    assert "napisem do siebie, metalową płytką od siebie: IN w c8, GND w c9, OUT w c10" in st["U1"]["text"]
+    assert st["BZ1"]["text"] == "Wepnij brzęczyk: plus (+) w a10, minus (−) w a14."
+    assert "obudową" in st["MK1"]["details"][0]
+    assert "Kierunek obojętny" in st["R1"]["text"]
+    assert "co drugą kolumnę" in st["J1"]["details"][0]
+    svg = render_breadboard(c, legend=False)
+    for ref in ("U1", "BZ1", "MK1", "R1", "J1"):
+        assert f'data-hl="p-{ref}"' in svg
+    parts = {p["ref"]: p for p in design_dict(c)["PARTS"]}
+    assert parts["U1"]["footprint"] == "Package_TO_SOT_THT:TO-220-3_Vertical"
+    assert parts["BZ1"]["symbol"] == "Device:Buzzer"
+    assert parts["MK1"]["symbol"] == "Device:Microphone_Condenser"
+    assert parts["R1"]["symbol"] == "Device:R_Photo"
+    assert parts["J1"]["footprint"].endswith("MX126-5.0-02P_1x02_P5.00mm")
+    assert parts["J1"]["pin_labels"] == {"1": "+12V", "2": "GND"}
+
+
+def test_more_kinds_errors():
+    with pytest.raises(HlbbError, match="TO-220 ma 3"):
+        Circuit("x").to220("U1", "X", ["A"])
+    c = Circuit("y")
+    c.net("N", c.terminal("J1", 8)["1"], c.resistor("R1", "1k")[1])
+    with pytest.raises(HlbbError, match="1x8"):
+        design_dict(c)

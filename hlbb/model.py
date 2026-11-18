@@ -57,9 +57,9 @@ class ModuleDef:
 
 
 # Part kinds
-TWO_LEG = {"resistor", "cap", "cap_e", "diode", "led", "fuse"}
+TWO_LEG = {"resistor", "cap", "cap_e", "diode", "led", "fuse", "buzzer", "mic", "ldr"}
 # three legs in one row, consecutive columns (TO-92 transistor/sensor/regulator, trimmer)
-INLINE = {"header", "to92", "pot", "led_rgb"}
+INLINE = {"header", "to92", "pot", "led_rgb", "to220", "terminal"}
 
 
 class Part:
@@ -204,6 +204,34 @@ class Circuit:
         part = self._add(Part(ref, "led_rgb", value, pins, **kw))
         part.common = common
         return part
+
+    def to220(self, ref, value, pins, **kw):
+        """TO-220 (stabilizer 7805/LM317, MOSFET IRF520, triac BT136). pins = leg names left
+        to right seen from the printed front, metal tab at the back (7805: IN, GND, OUT;
+        LM317: ADJ, OUT, IN; IRF520: G, D, S)."""
+        if len(pins) != 3:
+            raise HlbbError(f"{ref}: obudowa TO-220 ma 3 nóżki")
+        kw.setdefault("kind_pl", "element w obudowie TO-220")
+        return self._add(Part(ref, "to220", value, list(pins), **kw))
+
+    def buzzer(self, ref, value="brzęczyk", **kw):
+        """Buzzer with polarity: legs +, -."""
+        return self._add(Part(ref, "buzzer", value, ["+", "-"], **kw))
+
+    def microphone(self, ref, value="mikrofon elektretowy", **kw):
+        """Electret capsule: legs +, - (minus = the leg tied to the metal case)."""
+        return self._add(Part(ref, "mic", value, ["+", "-"], **kw))
+
+    def ldr(self, ref, value, **kw):
+        """Photoresistor: two legs, no polarity."""
+        return self._add(Part(ref, "ldr", value, ["1", "2"], **kw))
+
+    def terminal(self, ref, n: int, value=None, names: list[str] | None = None, **kw):
+        """Screw terminal (ARK), 5 mm pitch: on a breadboard every second hole."""
+        names = names or [str(i + 1) for i in range(n)]
+        if len(names) != n:
+            raise HlbbError(f"{ref}: podaj {n} nazw pinów")
+        return self._add(Part(ref, "terminal", value or f"złącze śrubowe 1x{n}", names, **kw))
 
     def pot(self, ref, value, **kw):
         """Potentiometer / trimmer with 3 legs in a row: 1, wiper (W), 3."""

@@ -22,6 +22,11 @@ DEFAULTS = {
     "led": ("Device:LED", "LED_THT:LED_D5.0mm", ["2", "1"]),
     "button": ("Switch:SW_Push", "Button_Switch_THT:SW_PUSH_6mm", ["1", "1", "2", "2"]),
     "fuse": ("Device:Polyfuse", "Fuse:Fuse_Bourns_MF-RHT050", ["1", "2"]),
+    "buzzer": ("Device:Buzzer", "Buzzer_Beeper:Buzzer_12x9.5RM7.6", ["1", "2"]),         # 1 = +
+    # Microphone_Condenser: 1 = -, 2 = +; the capsule sits on a cable, hence a 2-pin header
+    "mic": ("Device:Microphone_Condenser", "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical",
+            ["2", "1"]),
+    "ldr": ("Device:R_Photo", "OptoDevice:R_LDR_5.0x4.1mm_P3mm_Vertical", ["1", "2"]),
     "pot": ("Device:R_Potentiometer", "Potentiometer_THT:Potentiometer_Bourns_3296W_Vertical",
             ["1", "2", "3"]),
 }
@@ -52,6 +57,18 @@ def kicad_part(c: Circuit, part: Part) -> dict:
     if part.kind == "diode" and part.bidirectional:      # bidirectional TVS: no polarity
         return dict(symbol="Device:D_TVS", footprint=DEFAULTS["diode"][1],
                     pins=["1", "2"], labels=None)
+    if part.kind == "to220":
+        return dict(symbol="Connector_Generic:Conn_01x03",
+                    footprint="Package_TO_SOT_THT:TO-220-3_Vertical",
+                    pins=["1", "2", "3"], labels={str(i + 1): p.short for i, p in enumerate(part.pins)})
+    if part.kind == "terminal":
+        n = len(part.pins)
+        if not 2 <= n <= 6:
+            raise HlbbError(f"{part.ref}: złącze śrubowe 1x{n} — podaj kicad_symbol i kicad_footprint")
+        return dict(symbol=f"Connector:Screw_Terminal_01x{n:02d}",
+                    footprint=f"TerminalBlock:TerminalBlock_MaiXu_MX126-5.0-{n:02d}P_1x{n:02d}_P5.00mm",
+                    pins=[str(i + 1) for i in range(n)],
+                    labels={str(i + 1): p.short for i, p in enumerate(part.pins)})
     if part.kind == "led_rgb":
         # KiCad's 4-pin RGB symbols number the legs in the physical order R, common, G, B
         # (LED_RAGB = common anode, LED_RKGB = common cathode); map by leg name.

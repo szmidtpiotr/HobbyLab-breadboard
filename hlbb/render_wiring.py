@@ -11,6 +11,8 @@ KIND_PL = {
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "złącze",
     "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
     "to92": "obudowa TO-92", "pot": "potencjometr", "led_rgb": "dioda LED RGB",
+    "to220": "obudowa TO-220", "buzzer": "brzęczyk", "mic": "mikrofon", "ldr": "fotorezystor",
+    "terminal": "złącze śrubowe",
 }
 ROW = 28
 CH = 24          # channel spacing

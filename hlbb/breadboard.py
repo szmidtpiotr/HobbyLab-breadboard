@@ -111,7 +111,8 @@ class Breadboard:
             a = self.hole(holes[0])
             if a.row is None:
                 raise HlbbError(f"{part.ref}: tego elementu nie wpina się w szynę zasilania")
-            hs = [self._at(a.row, a.col + i) for i in range(len(part.pins))]
+            step = 2 if part.kind == "terminal" else 1     # 5 mm pitch ~ 2 holes
+            hs = [self._at(a.row, a.col + step * i) for i in range(len(part.pins))]
         elif part.kind == "button":
             a = self.hole(holes[0])
             if a.row != "e":

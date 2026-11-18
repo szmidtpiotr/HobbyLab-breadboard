@@ -52,6 +52,13 @@ def kicad_part(c: Circuit, part: Part) -> dict:
     if part.kind == "diode" and part.bidirectional:      # bidirectional TVS: no polarity
         return dict(symbol="Device:D_TVS", footprint=DEFAULTS["diode"][1],
                     pins=["1", "2"], labels=None)
+    if part.kind == "led_rgb":
+        # KiCad's 4-pin RGB symbols number the legs in the physical order R, common, G, B
+        # (LED_RAGB = common anode, LED_RKGB = common cathode); map by leg name.
+        order = ["R", part.common, "G", "B"]
+        return dict(symbol="Device:LED_RAGB" if part.common == "A" else "Device:LED_RKGB",
+                    footprint="LED_THT:LED_D5.0mm-4_RGB",
+                    pins=[str(order.index(p.display) + 1) for p in part.pins], labels=None)
     if part.kind == "to92":
         # Pins in the user's order (datasheet, flat face): a generic 3-pin symbol keeps
         # the board right whatever the transistor's pinout; give kicad_symbol for a real one.

@@ -87,7 +87,7 @@ wherever you cloned/installed it — path and remote differ per setup.
   (their pin spacing wasn't verified) → always beside the board.
 - Use the real kind when hlbb has it: `c.fuse()` (PTC or glass fuse), `c.transistor()` /
   `c.to92()` (anything in TO-92: BC547, DS18B20, 78L05 — pins in datasheet order seen from the
-  flat face), `c.pot()`, `c.diode(..., bidirectional=True)` for a bidirectional TVS, and
+  flat face), `c.pot()`, `c.led_rgb()` (5 mm RGB; set `common="K"` for common cathode), `c.diode(..., bidirectional=True)` for a bidirectional TVS, and
   `kind_pl="…"` to name a part correctly in the steps ("dioda Zenera", "mostek prostowniczy").
   Never draw a fuse as a resistor or a transistor as a pin header.
 - Only for a part hlbb really lacks (DHT11, a relay, a crystal…) use

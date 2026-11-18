@@ -87,3 +87,31 @@ def test_kicad_defaults():
     assert parts["Q1"]["pin_labels"] == {"1": "C", "2": "B", "3": "E"}
     assert parts["D1"]["symbol"] == "Device:D_TVS"
     assert d["NETS"]["B"] == [("Q1", "2"), ("RV1", "2")]
+
+
+def test_led_rgb_common_anode():
+    c = Circuit("x", board=Board.HALF_400)
+    led = c.led_rgb("LED1", "5 mm")
+    r = c.resistor("R1", "330 Ω")
+    c.net("RED", led["R"], r[1])
+    bb = c.breadboard
+    bb.place(led, "a10")
+    bb.place(r, "b10", "b16")
+    assert check(c).ok
+    s = [x for x in build_assembly(c)["steps"] if x["title"].startswith("LED1")][0]
+    assert s["text"] == ("Wepnij diodę RGB 5 mm (LED1): czerwona w a10, najdłuższa (wspólna "
+                         "anoda, +) w a11, zielona w a12, niebieska w a13.")
+    assert 'data-hl="p-LED1"' in render_breadboard(c, legend=False)
+    d = design_dict(c)
+    p = {x["ref"]: x for x in d["PARTS"]}["LED1"]
+    assert p["symbol"] == "Device:LED_RAGB" and p["footprint"] == "LED_THT:LED_D5.0mm-4_RGB"
+    assert d["NETS"]["RED"][0] == ("LED1", "1")
+
+
+def test_led_rgb_common_cathode_and_errors():
+    c = Circuit("x")
+    led = c.led_rgb("LED1", common="K")
+    c.net("GND", led["K"], c.resistor("R1", "1k")[1])
+    assert {x["ref"]: x for x in design_dict(c)["PARTS"]}["LED1"]["symbol"] == "Device:LED_RKGB"
+    with pytest.raises(HlbbError):
+        Circuit("y").led_rgb("LED2", common="X")

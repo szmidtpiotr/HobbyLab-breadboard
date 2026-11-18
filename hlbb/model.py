@@ -59,7 +59,7 @@ class ModuleDef:
 # Part kinds
 TWO_LEG = {"resistor", "cap", "cap_e", "diode", "led", "fuse"}
 # three legs in one row, consecutive columns (TO-92 transistor/sensor/regulator, trimmer)
-INLINE = {"header", "to92", "pot"}
+INLINE = {"header", "to92", "pot", "led_rgb"}
 
 
 class Part:
@@ -189,6 +189,21 @@ class Circuit:
         if len(pins) != 3:
             raise HlbbError(f"{ref}: obudowa TO-92 ma 3 nóżki")
         return self._add(Part(ref, "to92", value, list(pins), **kw))
+
+    def led_rgb(self, ref, value="RGB", common="A", pins=None, **kw):
+        """5 mm RGB LED, 4 legs in a row. common = "A" (common anode, to +) or "K" (common
+        cathode, to ground). pins = leg names in order; the default is the usual layout
+        (single leg = red, then the longest = common, then green, blue), measured on a
+        real part."""
+        if common not in ("A", "K"):
+            raise HlbbError(f"{ref}: common musi być \"A\" (wspólna anoda) albo \"K\" (katoda)")
+        pins = list(pins or ("R", common, "G", "B"))
+        if len(pins) != 4 or common not in pins:
+            raise HlbbError(f"{ref}: dioda RGB ma 4 nóżki, w tym wspólną „{common}”")
+        kw.setdefault("kind_pl", "dioda LED RGB")
+        part = self._add(Part(ref, "led_rgb", value, pins, **kw))
+        part.common = common
+        return part
 
     def pot(self, ref, value, **kw):
         """Potentiometer / trimmer with 3 legs in a row: 1, wiper (W), 3."""

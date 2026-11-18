@@ -123,6 +123,8 @@ def render_breadboard(c: Circuit, legend: bool = True) -> str:
                     _label(s, x, y + 30, pin.short, size=11, fill="#7a4b00")
         elif part.kind == "to92":
             _to92(s, part, [hole_xy(h) for h in pl.holes])
+        elif part.kind == "led_rgb":
+            _led_rgb(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "pot":
             _pot(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "button":
@@ -331,6 +333,22 @@ def _to92(s: Svg, part, pts):
            stroke="#000", sw=2, fill="#2a2a2a")
     s.line(x0 + 2, yb, x1 - 2, yb, stroke="#bbbbbb", sw=4)          # the flat face
     _label(s, (x0 + x1) / 2, yb - r - 10, f"{part.ref} {part.value}", size=14)
+    _pin_names_under(s, part, pts)
+
+
+def _led_rgb(s: Svg, part, pts):
+    """5 mm RGB LED seen from above: a small milky dome, four legs fanning out to the
+    holes; the common (longest) leg is drawn thicker."""
+    xs = [p[0] for p in pts]
+    y = pts[0][1]
+    cx, cy, r = (xs[0] + xs[-1]) / 2, y - 34, 20
+    common = part.base_names.index(part.common)
+    for i, (x, _) in enumerate(pts):
+        s.line(cx + (i - 1.5) * 7, cy + r - 4, x, y, stroke="#8a8a8a", sw=4 if i == common else 2.5)
+    s.circle(cx, cy, r, fill="#f4f1ea", stroke="#888", sw=2)
+    for i, col in enumerate(("#e02424", "#1e9e3a", "#1f5fd6")):     # the three dies
+        s.circle(cx + (i - 1) * 8, cy, 4, fill=col)
+    _label(s, cx, cy - r - 8, f"{part.ref} {part.value}", size=14)
     _pin_names_under(s, part, pts)
 
 

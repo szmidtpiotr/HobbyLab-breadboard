@@ -10,7 +10,7 @@ KIND_PL = {
     "resistor": "rezystor", "cap": "kondensator", "cap_e": "kondensator elektrolityczny",
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "złącze",
     "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
-    "to92": "obudowa TO-92", "pot": "potencjometr",
+    "to92": "obudowa TO-92", "pot": "potencjometr", "led_rgb": "dioda LED RGB",
 }
 ROW = 28
 CH = 24          # channel spacing

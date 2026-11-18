@@ -37,6 +37,7 @@ h = c.header("J1", 4, names=["VCC", "GND", "SDA", "SCL"])
 f1 = c.fuse("F1", "PTC 50 mA")                # bezpiecznik (polimerowy/szklany), 2 nóżki, bez biegunowości
 q1 = c.transistor("Q1", "BC547B")             # TO-92; pins= nazwy nóżek od lewej patrząc na płaską stronę (domyślnie C,B,E)
 u5 = c.to92("U5", "DS18B20", ["GND", "DQ", "VDD"])   # inny układ w TO-92 (czujnik, stabilizator 78L05, TL431)
+rgb = c.led_rgb("LED2", "5 mm")              # 4 nóżki w rzędzie: R, wspólna (najdłuższa), G, B; common="A" (+) albo "K" (−)
 rv = c.pot("RV1", "10 kΩ")                    # potencjometr: piny 1, W (suwak), 3
 tvs = c.diode("D1", "P6KE33CA", bidirectional=True, kind_pl="dioda TVS")   # dwukierunkowa = bez paska
 br = c.dip("BR1", "DB107", ["~A", "~B", "+", "-"], kind_pl="mostek prostowniczy")  # kind_pl = nazwa w krokach
@@ -68,7 +69,7 @@ c.cable(u["D4"], m["SDA"], "blue")            # kabel moduł–moduł (bez płyt
   Szyny `T…` leżą nad rzędem a, szyny `B…` pod rzędem j — elementy zasilane z górnej szyny
   kładź w górnej połowie, wtedy przewody są krótkie.
 - **Rodzaje elementów:** `resistor`, `cap`, `cap_electrolytic`, `diode`, `led`, `fuse`
-  (2 nóżki); `transistor`, `to92`, `pot` (3 nóżki w rzędzie); `dip`, `module`, `header`,
+  (2 nóżki); `transistor`, `to92`, `pot` (3 nóżki w rzędzie); `led_rgb` (4 w rzędzie); `dip`, `module`, `header`,
   `button`. Każdy przyjmuje `kind_pl="…"` — nazwę w krokach montażu („dioda Zenera”,
   „mostek prostowniczy”). Zastępczy `header` tylko dla rzeczy spoza tej listy, i wtedy
   powiedz osobie budującej, że element jest narysowany jako zwykły blok nóżek.

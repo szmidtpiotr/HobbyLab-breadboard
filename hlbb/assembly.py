@@ -18,7 +18,7 @@ KIND_PL = {
     "resistor": "rezystor", "cap": "kondensator ceramiczny", "cap_e": "kondensator elektrolityczny",
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "listwa goldpin",
     "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
-    "to92": "element w obudowie TO-92", "pot": "potencjometr",
+    "to92": "element w obudowie TO-92", "pot": "potencjometr", "led_rgb": "dioda LED RGB",
 }
 
 
@@ -40,7 +40,8 @@ GROUPS = [
 ]
 PART_GROUP = {"module": "moduly", "dip": "moduly", "resistor": "niskie", "diode": "niskie",
               "cap": "wysokie", "cap_e": "wysokie", "led": "wysokie", "button": "wysokie",
-              "header": "wysokie", "fuse": "niskie", "to92": "wysokie", "pot": "wysokie"}
+              "header": "wysokie", "fuse": "niskie", "to92": "wysokie", "pot": "wysokie",
+              "led_rgb": "wysokie"}
 POWER = {"5V", "+5V", "3V3", "+3V3", "VCC", "VIN", "VBUS", "VDD", "12V", "+12V"}
 
 
@@ -126,6 +127,17 @@ def _part_step(part: Part, holes: list[Hole]) -> tuple[str, str, list[str]]:
         details.append("„Do siebie” = w dół obrazka, w stronę rzędu j. Nóżki od lewej to "
                        f"{', '.join(p.display for p in part.pins)}, patrząc na płaską stronę.")
         details.append("Odwrotnie wpięty nie działa albo się grzeje — sprawdź napis na obudowie.")
+    elif part.kind == "led_rgb":
+        name = {"R": "czerwona", "G": "zielona", "B": "niebieska"}
+        com = "wspólna anoda, +" if part.common == "A" else "wspólna katoda, −"
+        legs = [f"najdłuższa ({com}) w {x}" if p.display == part.common
+                else f"{name.get(p.display, p.display)} w {x}" for p, x in zip(part.pins, h)]
+        text = f"Wepnij diodę RGB {part.value} ({part.ref}): {', '.join(legs)}."
+        if part.common == "A":
+            details.append("Kolor świeci, gdy jego nóżkę ściągniesz do masy przez rezystor.")
+        else:
+            details.append("Kolor świeci, gdy na jego nóżkę podasz plus przez rezystor.")
+        details.append("Najdłuższa nóżka jest druga od strony pojedynczej (czerwonej).")
     elif part.kind == "pot":
         text = (f"Wepnij {kind} {part.value}: skrajna nóżka 1 w {h[0]}, środkowa (suwak) "
                 f"w {h[1]}, skrajna nóżka 3 w {h[2]}.")

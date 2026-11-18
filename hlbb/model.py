@@ -57,16 +57,24 @@ class ModuleDef:
 
 
 # Part kinds
-TWO_LEG = {"resistor", "cap", "cap_e", "diode", "led"}
+TWO_LEG = {"resistor", "cap", "cap_e", "diode", "led", "fuse"}
+# three legs in one row, consecutive columns (TO-92 transistor/sensor/regulator, trimmer)
+INLINE = {"header", "to92", "pot"}
 
 
 class Part:
     def __init__(self, ref: str, kind: str, value: str, pin_names: list[str],
                  width: int | None = None, mdef: ModuleDef | None = None,
-                 kicad_symbol: str | None = None, kicad_footprint: str | None = None):
+                 kicad_symbol: str | None = None, kicad_footprint: str | None = None,
+                 kind_pl: str | None = None, bidirectional: bool = False):
         self.ref = ref
         self.kind = kind
         self.value = value
+        # what the part is called in pictures and assembly steps ("tranzystor",
+        # "mostek prostowniczy"); None = the default name of the kind
+        self.kind_pl = kind_pl
+        # a diode with no polarity (bidirectional TVS such as P6KE33CA)
+        self.bidirectional = bidirectional
         self.width = width
         self.mdef = mdef
         self.kicad_symbol = kicad_symbol or (mdef.kicad_symbol if mdef else None)
@@ -164,6 +172,28 @@ class Circuit:
 
     def led(self, ref, value="LED", **kw):
         return self._add(Part(ref, "led", value, ["A", "K"], **kw))
+
+    def fuse(self, ref, value, **kw):
+        """Fuse with two legs and no polarity: polymer PTC (flat disc) or glass."""
+        return self._add(Part(ref, "fuse", value, ["1", "2"], **kw))
+
+    def transistor(self, ref, value, pins=("C", "B", "E"), **kw):
+        """TO-92 transistor. pins = leg names left to right, seen from the flat face
+        (datasheet order: BC547 = C, B, E; 2N7000 = S, G, D)."""
+        kw.setdefault("kind_pl", "tranzystor")
+        return self._add(Part(ref, "to92", value, list(pins), **kw))
+
+    def to92(self, ref, value, pins, **kw):
+        """Anything else in a TO-92 body (DS18B20, 78L05, TL431...): same shape and
+        orientation rule as transistor()."""
+        if len(pins) != 3:
+            raise HlbbError(f"{ref}: obudowa TO-92 ma 3 nóżki")
+        return self._add(Part(ref, "to92", value, list(pins), **kw))
+
+    def pot(self, ref, value, **kw):
+        """Potentiometer / trimmer with 3 legs in a row: 1, wiper (W), 3."""
+        kw.setdefault("kind_pl", "potencjometr")
+        return self._add(Part(ref, "pot", value, ["1", "W", "3"], **kw))
 
     def dip(self, ref, value, pins: list[str], width: int = 3, **kw):
         if len(pins) % 2:

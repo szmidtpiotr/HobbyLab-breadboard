@@ -14,6 +14,7 @@ RAIL_Y = {"T+": -3.2, "T-": -2.2, "B+": 13.2, "B-": 14.2}
 BODY = {
     "resistor": ("#dcc08a", "#6b5a2e"), "cap": ("#e8a33d", "#8a5a12"),
     "cap_e": ("#2b4f9e", "#162a55"), "diode": ("#2a2a2a", "#000"), "led": ("#e23b3b", "#8a1010"),
+    "fuse": ("#f2c14e", "#8a6a10"),
 }
 
 
@@ -120,6 +121,10 @@ def render_breadboard(c: Circuit, legend: bool = True) -> str:
             if any(not p.name.isdigit() for p in part.pins):     # named pins: print them under
                 for pin, (x, y) in zip(part.pins, pts):
                     _label(s, x, y + 30, pin.short, size=11, fill="#7a4b00")
+        elif part.kind == "to92":
+            _to92(s, part, [hole_xy(h) for h in pl.holes])
+        elif part.kind == "pot":
+            _pot(s, part, [hole_xy(h) for h in pl.holes])
         elif part.kind == "button":
             pts = [hole_xy(h) for h in pl.holes]
             x0, y0 = pts[0][0] - 10, pts[0][1] - 10
@@ -283,12 +288,15 @@ def _two_leg(s: Svg, part, a, b):
     if part.kind in ("resistor", "diode"):
         half = max(min(d / 2 - 22, 30), 6)
         body(half, 20, fill, stroke)
-        if part.kind == "diode":            # silver band at the cathode (pin 2 = K)
+        if part.kind == "diode" and not part.bidirectional:   # band at the cathode (pin 2 = K)
             p, q, (ux, uy) = _seg(a, b, mx + (b[0] - a[0]) / d * (half - 4),
                                   my + (b[1] - a[1]) / d * (half - 4), 3)
             s.line(p[0], p[1], q[0], q[1], stroke="#ddd", sw=20)
     elif part.kind == "cap":
         s.circle(mx, my, 13, fill=fill, stroke=stroke, sw=2)
+    elif part.kind == "fuse":                # polymer PTC: a flat yellow disc
+        s.circle(mx, my, 15, fill=fill, stroke=stroke, sw=2)
+        s.text(mx, my + 5, "F", size=14, anchor="middle", weight="bold", fill="#5a4300")
     elif part.kind == "cap_e":
         half = max(min(d / 2 - 24, 22), 6)
         body(half, 28, fill, stroke)
@@ -306,6 +314,35 @@ def _two_leg(s: Svg, part, a, b):
         _label(s, mx + 24, my + 5, label, anchor="start")
     else:
         _label(s, mx, my - 22, label)
+
+
+def _pin_names_under(s: Svg, part, pts):
+    for pin, (x, y) in zip(part.pins, pts):
+        _label(s, x, y + 30, pin.short, size=11, fill="#7a4b00")
+
+
+def _to92(s: Svg, part, pts):
+    """TO-92 seen from above: a half-disc, the flat face (with the print) at the bottom
+    of the picture -- legs left to right are the datasheet order seen from that face."""
+    (xa, y), (xc, _) = pts[0], pts[-1]
+    x0, x1 = xa - 14, xc + 14
+    r, yb = (x1 - x0) / 2, y - 6
+    s.path(f"M{x0:.1f},{yb:.1f} L{x1:.1f},{yb:.1f} A{r:.1f},{r:.1f} 0 0 0 {x0:.1f},{yb:.1f} Z",
+           stroke="#000", sw=2, fill="#2a2a2a")
+    s.line(x0 + 2, yb, x1 - 2, yb, stroke="#bbbbbb", sw=4)          # the flat face
+    _label(s, (x0 + x1) / 2, yb - r - 10, f"{part.ref} {part.value}", size=14)
+    _pin_names_under(s, part, pts)
+
+
+def _pot(s: Svg, part, pts):
+    (xa, y), (xc, _) = pts[0], pts[-1]
+    x0, x1 = xa - 14, xc + 14
+    s.rect(x0, y - 40, x1 - x0, 34, fill="#2f5fb3", stroke="#163063", rx=5, sw=2)
+    cx, cy = (x0 + x1) / 2, y - 23
+    s.circle(cx, cy, 11, fill="#e8e8e8", stroke="#555", sw=2)
+    s.line(cx - 7, cy, cx + 7, cy, stroke="#555", sw=3)              # adjusting slot
+    _label(s, cx, y - 48, f"{part.ref} {part.value}", size=14)
+    _pin_names_under(s, part, pts)
 
 
 def _dip(s: Svg, part, pts):

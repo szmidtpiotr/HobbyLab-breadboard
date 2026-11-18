@@ -21,6 +21,9 @@ DEFAULTS = {
     "diode": ("Device:D", "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal", ["2", "1"]),
     "led": ("Device:LED", "LED_THT:LED_D5.0mm", ["2", "1"]),
     "button": ("Switch:SW_Push", "Button_Switch_THT:SW_PUSH_6mm", ["1", "1", "2", "2"]),
+    "fuse": ("Device:Polyfuse", "Fuse:Fuse_Bourns_MF-RHT050", ["1", "2"]),
+    "pot": ("Device:R_Potentiometer", "Potentiometer_THT:Potentiometer_Bourns_3296W_Vertical",
+            ["1", "2", "3"]),
 }
 
 
@@ -46,6 +49,15 @@ def kicad_part(c: Circuit, part: Part) -> dict:
     if part.kicad_symbol and part.kicad_footprint:
         return dict(symbol=part.kicad_symbol, footprint=part.kicad_footprint,
                     pins=[str(i + 1) for i in range(len(part.pins))], labels=None)
+    if part.kind == "diode" and part.bidirectional:      # bidirectional TVS: no polarity
+        return dict(symbol="Device:D_TVS", footprint=DEFAULTS["diode"][1],
+                    pins=["1", "2"], labels=None)
+    if part.kind == "to92":
+        # Pins in the user's order (datasheet, flat face): a generic 3-pin symbol keeps
+        # the board right whatever the transistor's pinout; give kicad_symbol for a real one.
+        return dict(symbol="Connector_Generic:Conn_01x03",
+                    footprint="Package_TO_SOT_THT:TO-92_Inline",
+                    pins=["1", "2", "3"], labels={str(i + 1): p.short for i, p in enumerate(part.pins)})
     if part.kind in DEFAULTS:
         sym, fp, pins = DEFAULTS[part.kind]
         return dict(symbol=sym, footprint=fp, pins=pins, labels=None)

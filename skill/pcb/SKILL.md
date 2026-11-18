@@ -85,10 +85,15 @@ wherever you cloned/installed it — path and remote differ per setup.
 - On a 400/830 board every 6th rail column has no hole (`T+6` is rejected).
 - The XIAO ESP32-S3, Arduino UNO and ESP32-S3 DevKitC have no breadboard footprint in hlbb
   (their pin spacing wasn't verified) → always beside the board.
-- If hlbb lacks a part you need (a sensor like DHT11, a potentiometer, a transistor in TO-92,
-  …), use `c.header("U2", 3, value="DHT11", names=["VCC", "DATA", "GND"])` — the picture then
-  shows the real name and the pin names under each leg. Say so in the reply: it's drawn as a
-  generic pin block, not the part's real shape.
+- Use the real kind when hlbb has it: `c.fuse()` (PTC or glass fuse), `c.transistor()` /
+  `c.to92()` (anything in TO-92: BC547, DS18B20, 78L05 — pins in datasheet order seen from the
+  flat face), `c.pot()`, `c.diode(..., bidirectional=True)` for a bidirectional TVS, and
+  `kind_pl="…"` to name a part correctly in the steps ("dioda Zenera", "mostek prostowniczy").
+  Never draw a fuse as a resistor or a transistor as a pin header.
+- Only for a part hlbb really lacks (DHT11, a relay, a crystal…) use
+  `c.header("U2", 3, value="DHT11", names=["VCC", "DATA", "GND"])` — the picture then shows the
+  real name and the pin names under each leg. Say so in the reply: it's drawn as a generic pin
+  block, not the part's real shape.
 - Rails `T…` are above row a, `B…` below row j: put parts powered from a rail in that half.
   A leg may go straight into a rail (`bb.place(r, "a15", "T+15")`), which saves a wire.
 

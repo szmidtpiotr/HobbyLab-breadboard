@@ -17,8 +17,16 @@ FORMAT, VERSION = "hlbb-assembly", 1
 KIND_PL = {
     "resistor": "rezystor", "cap": "kondensator ceramiczny", "cap_e": "kondensator elektrolityczny",
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "listwa goldpin",
-    "button": "przycisk", "module": "moduł",
+    "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
+    "to92": "element w obudowie TO-92", "pot": "potencjometr",
 }
+
+
+def kind_name(part: Part) -> str:
+    """What the part is called in the steps: its own kind_pl, else the kind's name."""
+    return part.kind_pl or KIND_PL.get(part.kind, part.kind)
+
+
 BAND = ["czarny", "brązowy", "czerwony", "pomarańczowy", "żółty", "zielony", "niebieski",
         "fioletowy", "szary", "biały"]
 GROUPS = [
@@ -32,7 +40,7 @@ GROUPS = [
 ]
 PART_GROUP = {"module": "moduly", "dip": "moduly", "resistor": "niskie", "diode": "niskie",
               "cap": "wysokie", "cap_e": "wysokie", "led": "wysokie", "button": "wysokie",
-              "header": "wysokie"}
+              "header": "wysokie", "fuse": "niskie", "to92": "wysokie", "pot": "wysokie"}
 POWER = {"5V", "+5V", "3V3", "+3V3", "VCC", "VIN", "VBUS", "VDD", "12V", "+12V"}
 
 
@@ -88,7 +96,7 @@ def _end_text(end) -> str:
 def _part_step(part: Part, holes: list[Hole]) -> tuple[str, str, list[str]]:
     """title, text, details for placing one part."""
     h = [x.name for x in holes]
-    kind = KIND_PL.get(part.kind, part.kind)
+    kind = kind_name(part)
     title = f"{part.ref}: {kind}" if part.value == kind else f"{part.ref}: {kind} {part.value}"
     details = []
     if part.kind == "resistor":
@@ -102,8 +110,26 @@ def _part_step(part: Part, holes: list[Hole]) -> tuple[str, str, list[str]]:
         text = f"Wepnij kondensator: plus (dłuższa nóżka) w {h[0]}, minus w {h[1]}."
         details.append("Minus = nóżka od strony jasnego paska z kreskami na obudowie.")
         details.append("Odwrotnie wpięty elektrolit może się nagrzać i wybrzuszyć.")
+    elif part.kind == "diode" and part.bidirectional:
+        text = (f"Wepnij diodę {part.value} w {h[0]} i {h[1]}. Kierunek obojętny — "
+                f"to dioda dwukierunkowa, nie ma paska katody.")
     elif part.kind == "diode":
+        # text kept word for word: apps that carry checks over between versions match on it
         text = f"Wepnij diodę: anoda w {h[0]}, katoda (strona z paskiem) w {h[1]}."
+    elif part.kind == "fuse":
+        text = f"Wepnij bezpiecznik {part.value} w {h[0]} i {h[1]}. Kierunek obojętny."
+        details.append("Bezpiecznik polimerowy (PTC) to zwykle płaski, żółty krążek na dwóch "
+                       "nóżkach — łatwo go pomylić z kondensatorem, sprawdź nadruk.")
+    elif part.kind == "to92":
+        pins = ", ".join(f"{p.display} w {x}" for p, x in zip(part.pins, h))
+        text = f"Wepnij {kind} {part.value} ({part.ref}) płaską stroną z napisem do siebie: {pins}."
+        details.append("„Do siebie” = w dół obrazka, w stronę rzędu j. Nóżki od lewej to "
+                       f"{', '.join(p.display for p in part.pins)}, patrząc na płaską stronę.")
+        details.append("Odwrotnie wpięty nie działa albo się grzeje — sprawdź napis na obudowie.")
+    elif part.kind == "pot":
+        text = (f"Wepnij {kind} {part.value}: skrajna nóżka 1 w {h[0]}, środkowa (suwak) "
+                f"w {h[1]}, skrajna nóżka 3 w {h[2]}.")
+        details.append("Zamiana skrajnych nóżek tylko odwraca kierunek kręcenia.")
     elif part.kind == "led":
         text = f"Wepnij diodę LED: dłuższa nóżka (+) w {h[0]}, krótsza (−) w {h[1]}."
         details.append("Krótsza nóżka jest też od strony ściętej krawędzi obudowy.")
@@ -138,7 +164,7 @@ def build_assembly(c: Circuit) -> dict:
             or (c.breadboard and c.breadboard.placement_of(p))]
     for p in c.parts:
         if p in used or any(p is e.part for cab in c.cables for e in (cab.a, cab.b)):
-            out["parts"].append({"ref": p.ref, "kind": p.kind, "kind_pl": KIND_PL.get(p.kind, p.kind),
+            out["parts"].append({"ref": p.ref, "kind": p.kind, "kind_pl": kind_name(p),
                                  "value": p.value, "bands": resistor_bands(p.value) if p.kind == "resistor" else None})
     if not res.ok:
         out["hash"] = _hash(out)

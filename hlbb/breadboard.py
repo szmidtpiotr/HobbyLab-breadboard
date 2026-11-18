@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .model import HlbbError, Part, Pin, TWO_LEG
+from .model import HlbbError, INLINE, Part, Pin, TWO_LEG
 
 ROWS = "abcdefghij"
 ROW_Y = {r: (i if i < 5 else i + 2) for i, r in enumerate(ROWS)}   # pitches; e=4, f=7
@@ -104,8 +104,13 @@ class Breadboard:
             if len(holes) != 1:
                 raise HlbbError(f"{part.ref}: podaj jedną dziurkę — tę pod nóżką 1")
             hs = self._dip_holes(part, self.hole(holes[0]))
-        elif part.kind == "header":
+        elif part.kind in INLINE:
+            if len(holes) != 1:
+                raise HlbbError(f"{part.ref}: podaj jedną dziurkę — tę pod pierwszą nóżką "
+                                f"(kolejne nóżki idą w prawo, w tym samym rzędzie)")
             a = self.hole(holes[0])
+            if a.row is None:
+                raise HlbbError(f"{part.ref}: tego elementu nie wpina się w szynę zasilania")
             hs = [self._at(a.row, a.col + i) for i in range(len(part.pins))]
         elif part.kind == "button":
             a = self.hole(holes[0])

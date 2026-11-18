@@ -9,7 +9,8 @@ from .svg import Svg, color, color_pl, net_color, text_width
 KIND_PL = {
     "resistor": "rezystor", "cap": "kondensator", "cap_e": "kondensator elektrolityczny",
     "diode": "dioda", "led": "dioda LED", "dip": "układ scalony", "header": "złącze",
-    "button": "przycisk", "module": "moduł",
+    "button": "przycisk", "module": "moduł", "fuse": "bezpiecznik",
+    "to92": "obudowa TO-92", "pot": "potencjometr",
 }
 ROW = 28
 CH = 24          # channel spacing
@@ -73,7 +74,7 @@ def render_wiring(c: Circuit) -> str:
     for part in others:
         pins = [p for p in part.pins if p in used]
         title = f"{part.ref}: {part.value}"
-        sub = KIND_PL.get(part.kind, part.kind)
+        sub = part.kind_pl or KIND_PL.get(part.kind, part.kind)
         rw = max([text_width(p.display, 15) for p in pins] + [text_width(title, 16), text_width(sub, 13)]) + 50
         rw_max = max(rw_max, rw)
         h = 62 + ROW * len(pins)

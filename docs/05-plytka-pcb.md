@@ -85,4 +85,4 @@ Jeśli poprawisz coś ręcznie bezpośrednio w KiCadzie (przesuniesz element na 
 żeby tę samą zmianę przenieść z powrotem do opisu — kolejne `hlbb kicad` nadpisze plik KiCada
 od zera, z samego opisu, i ręczna poprawka zniknie.
 
-Dalej: [06 — Integracja z własną aplikacją](06-integracja.md).
+Dalej: [05a — Mapa montażu płytki PCB](05a-mapa-montazu-pcb.md).

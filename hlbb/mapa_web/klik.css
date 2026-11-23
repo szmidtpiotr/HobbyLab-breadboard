@@ -1,0 +1,15 @@
+#hlbb-licznik {
+  display: inline-block;
+  margin: 6px 12px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: #b8860b;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+#hlbb-licznik.hlbb-gotowe { background: #2e8b57; }
+:root, .dark.topmostdiv { --pad-color-highlight-marked: #3ad16a; }
+.bom tr.checked td { opacity: .55; }

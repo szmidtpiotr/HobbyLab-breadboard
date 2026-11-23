@@ -121,10 +121,20 @@ def main(argv=None) -> int:
     k.add_argument("-o", "--out")
     k.add_argument("--project")
     k.add_argument("--run", action="store_true")
+    m = sub.add_parser("mapa", help="mapa montażu płytki PCB (KiCad/EasyEDA) z odhaczaniem kliknięciem")
+    m.add_argument("plytka", help=".kicad_pcb albo plik płytki EasyEDA .json")
+    m.add_argument("--opisy", help="opisy.yml: tytul, czesci (opis/ref/wartosc), dolacz (EasyEDA)")
+    m.add_argument("-o", "--out")
+    m.add_argument("--nazwa", help="nazwa pliku: montaz-<nazwa>.html")
+    m.add_argument("--strony", choices=["FB", "F", "B"], default="FB")
     a = ap.parse_args(argv)
     try:
         if a.cmd == "render":
             return render(a.circuit, a.out, png=not a.no_png)
+        if a.cmd == "mapa":
+            from .mapa import mapa
+            mapa(a.plytka, a.opisy, a.out, a.nazwa, a.strony)
+            return 0
         if a.cmd == "kicad":
             return kicad(a.circuit, a.out, a.run, a.project)
     except HlbbError as e:

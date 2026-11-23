@@ -24,6 +24,9 @@ na płytce.
 - **Robi z tego samego opisu płytkę PCB** w KiCadzie — schemat, kontrola reguł (ERC/DRC),
   automatyczne trasowanie ścieżek, pliki gotowe do zamówienia u producenta (Gerbery) —
   opcjonalnie, potrzebuje Twojego komputera z KiCadem.
+- **Mapa montażu gotowej płytki PCB** (`hlbb mapa`) — z pliku płytki KiCada albo EasyEDA robi
+  jedną stronę HTML z listą części i obrazkiem płytki; klik w część oznacza tę jedną sztukę jako
+  przylutowaną, a licznik u góry pokazuje, ile zostało.
 
 | Obrazek płytki stykowej | Połączenia modułów kablami | Płytka PCB |
 |---|---|---|
@@ -38,6 +41,7 @@ na płytce.
 | [03 — Format opisu](docs/03-format-opisu.md) | ściąga: wszystkie elementy, płytki, zasady pisania opisu |
 | [04 — Montaż krok po kroku](docs/04-montaz-krok-po-kroku.md) | co umie `montaz.html`: powiększanie, śledzenie kroku, klawiatura |
 | [05 — Płytka PCB](docs/05-plytka-pcb.md) *(opcjonalnie)* | ten sam opis → schemat i płytka w KiCadzie |
+| [05a — Mapa montażu płytki PCB](docs/05a-mapa-montazu-pcb.md) *(opcjonalnie)* | gotowa płytka PCB → klikalna lista części do lutowania |
 | [06 — Integracja z własną aplikacją](docs/06-integracja.md) *(opcjonalnie)* | `assembly.json` i `breadboard-bare.svg` jako dane dla czegoś innego |
 | [07 — Jak to działa](docs/07-jak-to-dziala.md) | budowa programu, decyzje projektowe, pułapki |
 | [08 — Rozwiązywanie problemów](docs/08-problemy.md) | typowe błędy i co one znaczą |
@@ -62,7 +66,7 @@ hlbb/           kod narzędzia (biblioteka + CLI)
 examples/       cztery gotowe przykłady (Arduino Nano, filtr RC, moduły na kablach)
 docs/           rozdziały wymienione wyżej + obrazki
 skill/pcb/      przykładowy skill dla Claude Code — jak agent może używać hlbb (do adaptacji)
-tests/          41 testów automatycznych (pytest)
+tests/          testy automatyczne (pytest)
 ```
 
 ## Stan projektu
